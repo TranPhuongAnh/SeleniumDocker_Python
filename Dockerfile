@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src/
 
 # Default command to run the test
-CMD ["python", "src/grid_example.py"]
+CMD ["python", "src"]

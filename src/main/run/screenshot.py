@@ -1,5 +1,7 @@
 import os
 import time
+from pathlib import Path
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -10,8 +12,9 @@ def take_screenshot():
     # Thiết lập Chrome options
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--window-size=1920,1080')
 
     # Khởi tạo driver
     driver = webdriver.Chrome(options=chrome_options)
@@ -44,9 +47,22 @@ def take_screenshot():
         # Đợi kết quả tìm kiếm
         time.sleep(2)
 
-        # Chụp ảnh màn hình
+        # Lấy đường dẫn đến file đang chạy
+        current_file = Path(__file__).resolve()
+        project_folder = current_file.parent[3]
+        print("File đang chạy:", current_file)
+        print("Thư mục dự án:", project_folder)
+
+        # Tạo thư mục nếu chưa có
+        folder_path = f"{project_folder}/data/screenshots"
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        # Đặt tên file ảnh
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        screenshot_path = f"screenshot_{timestamp}.png"
+        screenshot_path = os.path.join(folder_path, f"screenshot_{timestamp}.png")
+
+        # Chụp và lưu ảnh màn hình
         driver.save_screenshot(screenshot_path)
         print(f"Đã chụp ảnh màn hình: {screenshot_path}")
 
