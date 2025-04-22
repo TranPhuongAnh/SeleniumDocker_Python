@@ -22,7 +22,7 @@ Nếu không lên → có thể port 4444 không được expose đúng.
 3. Kiểm tra "docker-compose.yml"
 - Đảm bảo có dòng:
 
-  ![img.png](img.png)
+  ![img.png](data/image/img.png)
 
 4. Thử curl hoặc ping từ host
 - Chạy dòng lệnh: curl http://localhost:4444/status

@@ -1,60 +1,14 @@
-import os
 import time
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 
-def get_environment():
-    """Lấy giá trị biến môi trường ENVIRONMENT hoặc mặc định là 'local'."""
-    return os.environ.get('ENVIRONMENT', 'local')
+from src.main.config.DriverManager import DriverManager
 
-def get_browser():
-    """Lấy giá trị biến môi trường BROWSER hoặc mặc định là 'chrome'."""
-    return os.environ.get('BROWSER', 'chrome')
-
-def get_remote_url():
-    """Lấy URL của Selenium Grid từ biến môi trường REMOTE_URL."""
-    return os.environ.get('REMOTE_URL', 'http://selenium-hub:4444/wd/hub')
-
-def create_driver():
-    """Tạo và trả về một WebDriver dựa trên các thiết lập môi trường."""
-    environment = get_environment()
-    browser = get_browser()
-
-    if browser.lower() == 'chrome':
-        options = ChromeOptions()
-        options.add_argument('--no-sandbox')
-        options.add_argument('--headless')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--window-size=1920,1080')
-    else:  # firefox
-        options = FirefoxOptions()
-        options.add_argument('--headless')
-
-    if environment == 'remote':
-        remote_url = get_remote_url()
-        print(f"Connecting to remote WebDriver at {remote_url}")
-        driver = webdriver.Remote(
-            command_executor=remote_url,
-            options=options
-        )
-    elif environment == 'docker':
-        if browser.lower() == 'chrome':
-            driver = webdriver.Chrome(options=options)
-        else:
-            driver = webdriver.Firefox(options=options)
-    else:  # local
-        if browser.lower() == 'chrome':
-            driver = webdriver.Chrome(options=options)
-        else:
-            driver = webdriver.Firefox(options=options)
-
-    return driver
 
 def main():
     """Hàm chính thực hiện các thao tác Selenium."""
-    driver = create_driver()
+    driver_manager = DriverManager()
+    driver = driver_manager.get_driver()
+
     try:
         print("Bắt đầu tự động hóa browser...")
 
@@ -83,7 +37,7 @@ def main():
         print(f"Đã xảy ra lỗi: {e}")
     finally:
         print("Đóng trình duyệt...")
-        driver.quit()
+        driver_manager.quit_driver()
 
 if __name__ == "__main__":
     main()

@@ -11,25 +11,32 @@ from src.main.config.Edge_config import EdgeConfiguration
 
 class DriverManager:
     driver = None
+    chrome = ChromeConfiguration()
+    firefox = FirefoxConfiguration()
+    edge = EdgeConfiguration()
+    safari = SafariConfiguration()
+    # driverTupe = DriverType()
+
     def __init__(self):
         self.driver_type = FileReaderManager.getInstance().get_config_reader().getBrowser()
         self.environment_type = FileReaderManager.getInstance().get_config_reader().getEnvironment()
 
     def webdriver_options(self):
         if self.driver_type == DriverType.CHROME:
-            return ChromeConfiguration.chrome_options()
+            return self.chrome.chrome_options()
         elif self.driver_type == DriverType.FIREFOX:
-            return FirefoxConfiguration.firefox_options()
+            return self.firefox.firefox_options()
         elif self.driver_type == DriverType.EDGE:
-            return EdgeConfiguration.edge_options()
+            return self.edge.edge_options()
         elif self.driver_type == DriverType.SAFARI:
-            return SafariConfiguration.safari_options()
+            return self.safari.safari_options()
 
     def connect_to_grid(self):
         # Kết nối tới Selenium Grid
         hub_host = os.getenv("HUB_HOST", "localhost")
         grid_url = f"http://{hub_host}:4444/wd/hub"
         print(f"Đang kết nối tới Selenium Grid tại {grid_url}...")
+        return grid_url
 
     def create_local_driver(self):
         if self.driver_type == DriverType.CHROME:

@@ -1,4 +1,3 @@
-from selenium import webdriver
 from src.main.config.DriverManager import DriverManager
 
 class example_local:
@@ -10,7 +9,7 @@ class example_local:
         print("Trang đã load:", self.driver.title)
 
     def close_browser(self):
-        DriverManager.quit_driver()
+        self.driver_manager.quit_driver()
 
 if __name__ == '__main__':
     Demo = example_local()

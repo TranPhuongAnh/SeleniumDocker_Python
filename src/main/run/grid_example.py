@@ -6,25 +6,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from src.main.config.DriverManager import DriverManager
+
 def run_test_on_grid():
-    """Chạy test sử dụng Selenium Grid."""
-    # Thiết lập Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--window-size=1920,1080')
-
-    # Kết nối tới Selenium Grid
-    hub_host = os.getenv("HUB_HOST", "localhost")
-    grid_url = f"http://{hub_host}:4444/wd/hub"
-    print(f"Đang kết nối tới Selenium Grid tại {grid_url}...")
-
-    driver = webdriver.Remote(
-        command_executor=grid_url,
-        options=chrome_options
-    )
-
+    driver_manager = DriverManager()
+    driver = driver_manager.get_driver()
     try:
         # Truy cập trang Wikipedia
         driver.get("https://vi.wikipedia.org")
@@ -72,7 +58,7 @@ def run_test_on_grid():
     except Exception as e:
         print(f"Đã xảy ra lỗi: {e}")
     finally:
-        driver.quit()
+        driver_manager.quit_driver()
 
 if __name__ == "__main__":
     # Đợi Selenium Grid khởi động

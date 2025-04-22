@@ -11,7 +11,7 @@ class FileReaderManager:
 
     def get_config_reader(self):
         if self._config is None:
-            self._config = ConfigFileReader  # hoặc đường dẫn động
+            self._config = ConfigFileReader()  # hoặc đường dẫn động
         return self._config
 
     @staticmethod

@@ -2,22 +2,15 @@ import os
 import time
 from pathlib import Path
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from datetime import datetime
 
+from src.main.config.DriverManager import DriverManager
+
 def take_screenshot():
     """Truy cập một trang web và chụp ảnh màn hình."""
-    # Thiết lập Chrome options
-    chrome_options = Options()
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--window-size=1920,1080')
-
-    # Khởi tạo driver
-    driver = webdriver.Chrome(options=chrome_options)
+    driver_manager = DriverManager()
+    driver = driver_manager.get_driver()
 
     try:
         # Truy cập trang web
@@ -33,23 +26,29 @@ def take_screenshot():
         print(f"Tiêu đề trang: {title}")
 
         # Tìm các menu chính
-        menus = driver.find_elements(By.CSS_SELECTOR, '.main-navigation ul.navigation-list li')
+        menus = driver.find_elements(By.XPATH, '//*[@id="mainnav"]/ul/li')
         print("\nCác menu chính:")
+        print("pass 1")
         for menu in menus:
             print(f"- {menu.text}")
 
         # Tìm kiếm trên trang
         search_box = driver.find_element(By.ID, 'id-search-field')
-        search_term = "selenium"
-        search_box.send_keys(search_term)
+        # Dữ liệu nhập sẵn
+        search_term = "python"
+        # Nhập dữ liệu trực tếp để tìm kiếm
+        key = input("Nhập từ khóa cần tìm kiếm: ")
+        search_box.send_keys(key)
         search_box.submit()
+        print(f"Tìm kiếm '{key}'...")
 
         # Đợi kết quả tìm kiếm
         time.sleep(2)
+        print("Chờ 2s")
 
         # Lấy đường dẫn đến file đang chạy
         current_file = Path(__file__).resolve()
-        project_folder = current_file.parent[3]
+        project_folder = current_file.parents[3]
         print("File đang chạy:", current_file)
         print("Thư mục dự án:", project_folder)
 
