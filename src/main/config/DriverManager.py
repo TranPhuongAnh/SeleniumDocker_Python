@@ -10,7 +10,6 @@ from src.main.config.Safari_config import SafariConfiguration
 from src.main.config.Edge_config import EdgeConfiguration
 
 class DriverManager:
-    driver = None
     chrome = ChromeConfiguration()
     firefox = FirefoxConfiguration()
     edge = EdgeConfiguration()
@@ -65,8 +64,8 @@ class DriverManager:
         return self.driver
 
     def get_driver(self):
-        if (self.driver is None):
-            self.driver = self.create_driver()
+        self.driver = self.create_driver()
+        self.driver.maximize_window()
 
         return self.driver
 
